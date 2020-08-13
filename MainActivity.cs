@@ -40,7 +40,6 @@ namespace AplicacionCasaDomotica
             else
                 boton_grabar.Click += delegate
                 {
-                    //boton_grabar.Text = "Fin de la grabacion";
                     isRecording = true;
                     if (isRecording)
                     {
@@ -66,10 +65,8 @@ namespace AplicacionCasaDomotica
                     var matches = data.GetStringArrayListExtra(RecognizerIntent.ExtraResults);
                     if (matches.Count != 0)
                     {
-                        //string textInput = texto.Text + matches[0];
                         string textInput =  matches[0];
 
-                        //textInput = textInput.Substring(0, 500);
                         if (textInput == "Hola")
                         {
                             texto.Text = "H";
@@ -84,7 +81,6 @@ namespace AplicacionCasaDomotica
                     else {
                         texto.Text = "No se reconoce";
                     }
-                    //boton_grabar.Text = "Seguir grabando";
                 }
             }
             base.OnActivityResult(requestCode, resultCode, data);
