@@ -25,7 +25,7 @@ namespace AplicacionCasaDomotica
             texto = FindViewById<TextView>(Resource.Id.tv_texto);
 
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
-            if (rec != "android.hardaware.microphone")
+            if (rec != "android.hardware.microphone")
             {
                 var alert = new Android.App.AlertDialog.Builder(boton_grabar.Context);
                 alert.SetTitle("No se detecta microfono para Grabar");
@@ -40,8 +40,8 @@ namespace AplicacionCasaDomotica
             else
                 boton_grabar.Click += delegate
                 {
-                    boton_grabar.Text = "Fin de la grabacion";
-                    isRecording = !isRecording;
+                    //boton_grabar.Text = "Fin de la grabacion";
+                    isRecording = true;
                     if (isRecording)
                     {
                         var voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
@@ -57,6 +57,7 @@ namespace AplicacionCasaDomotica
                     }
 
                 };
+            isRecording = false;
         }
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
@@ -65,15 +66,25 @@ namespace AplicacionCasaDomotica
                     var matches = data.GetStringArrayListExtra(RecognizerIntent.ExtraResults);
                     if (matches.Count != 0)
                     {
-                        string textInput = texto.Text + matches[0];
+                        //string textInput = texto.Text + matches[0];
+                        string textInput =  matches[0];
 
-                        textInput = textInput.Substring(0, 500);
-                        texto.Text = textInput;
+                        //textInput = textInput.Substring(0, 500);
+                        if (textInput == "Hola")
+                        {
+                            texto.Text = "H";
+                        }
+                        else {
+                            texto.Text = textInput;
+                        }
+
+                        
+                        
                     }
                     else {
                         texto.Text = "No se reconoce";
                     }
-                    boton_grabar.Text = "Seguir grabando";
+                    //boton_grabar.Text = "Seguir grabando";
                 }
             }
             base.OnActivityResult(requestCode, resultCode, data);
