@@ -39,7 +39,7 @@ namespace AplicacionCasaDomotica
         private Stream outStream = null;
         private Stream inStream = null;
         //MAC Address del dispositivo Bluetooth
-        private static string address = "00:13:01:07:01:59";
+        private static string address = "00:18:E4:40:00:06";
         //Id Unico de comunicacion
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         #endregion
