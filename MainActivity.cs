@@ -280,39 +280,53 @@ namespace AplicacionCasaDomotica
 
                         switch (textInput)
                         {
-                            case "Apagar luz": 
+                            case "Apagar luz sala":
+                                texto.Text = "a";
+                                break;
+                            case "Encender luz sala":
                                 texto.Text = "A";
                                 break;
-                            case "Encender luz":
+                            case "Encender Luz patio trasero":
                                 texto.Text = "B";
                                 break;
-                            case "Encender ventilador":
+                            case "Apagar luz patio trasero":
+                                texto.Text = "b";
+                                break;
+                            case "Apagar luz cuarto":
+                                texto.Text = "c";
+                                break;
+                            case "Encender luz cuarto":
                                 texto.Text = "C";
+                                break;
+                            case "Encender ventilador":
+                                texto.Text = "D";
                                 break;
                             case "encender ventilador":
-                                texto.Text = "C";
+                                texto.Text = "D";
                                 break;
                             case "Apagar ventilador":
-                                texto.Text = "D";
+                                texto.Text = "d";
                                 break;
                             case "Abrir puerta":
                                 texto.Text = "E";
                                 break;
+                            case "abrir puerta":
+                                texto.Text = "E";
+                                break;
                             case "Cerrar puerta":
-                                texto.Text = "F";
+                                texto.Text = "e";
                                 break;
                             case "Encender alarma":
                                 texto.Text = "G";
                                 break;
                             case "Apagar alarma":
-                                texto.Text = "H";
+                                texto.Text = "g";
                                 break;
                             default:
                                 texto.Text = "No encontrado";
                                 break;
                         }
-
-
+                        
 
                     }
                     else {
