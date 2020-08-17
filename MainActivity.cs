@@ -115,16 +115,42 @@ namespace AplicacionCasaDomotica
                     {
                         string textInput =  matches[0];
 
-                        if (textInput == "Hola")
+                        switch (textInput)
                         {
-                            texto.Text = "H";
-                        }
-                        else {
-                            texto.Text = textInput;
+                            case "Apagar luz": 
+                                texto.Text = "A";
+                                break;
+                            case "Encender luz":
+                                texto.Text = "B";
+                                break;
+                            case "Encender ventilador":
+                                texto.Text = "C";
+                                break;
+                            case "encender ventilador":
+                                texto.Text = "C";
+                                break;
+                            case "Apagar ventilador":
+                                texto.Text = "D";
+                                break;
+                            case "Abrir puerta":
+                                texto.Text = "E";
+                                break;
+                            case "Cerrar puerta":
+                                texto.Text = "F";
+                                break;
+                            case "Encender alarma":
+                                texto.Text = "G";
+                                break;
+                            case "Apagar alarma":
+                                texto.Text = "H";
+                                break;
+                            default:
+                                texto.Text = "No encontrado";
+                                break;
                         }
 
-                        
-                        
+
+
                     }
                     else {
                         texto.Text = "No se reconoce";
