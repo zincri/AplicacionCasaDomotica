@@ -13,6 +13,11 @@ using Java.Util;
 using Android.Bluetooth;
 using System.Threading.Tasks;
 
+//using FanControllerBluetooth;
+using System.Linq;
+using AlertDialog = Android.App.AlertDialog;
+
+
 namespace AplicacionCasaDomotica
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
@@ -44,6 +49,9 @@ namespace AplicacionCasaDomotica
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         #endregion
 
+        #region Prueba
+        BluetoothConnection myConnection = new BluetoothConnection();
+        #endregion
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -90,148 +98,161 @@ namespace AplicacionCasaDomotica
             isRecording = false;
             #endregion
 
-            #region CodigoBluetooth
-            tgConnect = FindViewById<ToggleButton>(Resource.Id.toggleButton1);
-            Result = FindViewById<TextView>(Resource.Id.textView1);
-            //Asignacion de evento del toggle button
-            tgConnect.CheckedChange += tgConnect_HandleCheckedChange;
-            //Verificamos la disponibilidad del sensor Bluetooth en el dispositivo
-            CheckBt();
-            #endregion
-        }
+         
 
-        #region MetodosBluetooth
+            #region Prueba
+            // Get our button from the layout resource,
+            // and attach an event to it
+            Button buttonConnect = FindViewById<Button>(Resource.Id.button1);
+            Button buttonDisconnect = FindViewById<Button>(Resource.Id.button2);
 
-        private void CheckBt()
-        {
-            //asignamos el sensor bluetooth con el que vamos a trabajar
-            mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+            SeekBar fanDrehzahl = FindViewById<SeekBar>(Resource.Id.seekBar1);
 
-            //Verificamos que este habilitado
-            if (!mBluetoothAdapter.Enable())
+            TextView connected = FindViewById<TextView>(Resource.Id.textView1);
+
+
+
+            BluetoothSocket _socket = null;
+
+
+
+
+            buttonConnect.Click += delegate
             {
-                Toast.MakeText(this, "Bluetooth Desactivado",
-                    ToastLength.Short).Show();
-            }
-            //verificamos que no sea nulo el sensor
-            if (mBluetoothAdapter == null)
+
+
+                myConnection = new BluetoothConnection();
+                myConnection.getAdapter();
+                myConnection.thisAdapter.StartDiscovery();
+
+                try
+                {
+                    myConnection.getDevice();
+                    myConnection.thisDevice.SetPairingConfirmation(false);
+
+                    myConnection.thisDevice.SetPairingConfirmation(true);
+                    myConnection.thisDevice.CreateBond();
+
+                }
+                catch (Exception deviceEX)
+                {
+                }
+                myConnection.thisAdapter.CancelDiscovery();
+
+                try
+                { _socket = myConnection.thisDevice.CreateRfcommSocketToServiceRecord(Java.Util.UUID.FromString("00001101-0000-1000-8000-00805f9b34fb")); } //the UUID of HC-05 and HC-06 is the same
+                catch (Exception ex)
+                {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    AlertDialog alert = dialog.Create();
+                    alert.SetTitle("Error");
+                    alert.SetMessage("Please go to settings and connect with the bluetooth module at first.");
+                    alert.SetButton("OK", (c, ev) =>
+                    {
+                        // Ok button click task: alert goes away  
+                    });
+                    alert.Show();
+                }
+
+                myConnection.thisSocket = _socket;
+
+                try
+                {
+                    myConnection.thisSocket.Connect();
+
+                    connected.Text = "Connected to the Arduino!";
+
+                    buttonDisconnect.Enabled = true;
+                    buttonConnect.Enabled = false;
+
+                }
+                catch (Exception CloseEX)
+                { }
+            };
+
+            buttonDisconnect.Click += delegate
             {
-                Toast.MakeText(this,
-                    "Bluetooth No Existe o esta Ocupado", ToastLength.Short)
-                    .Show();
-            }
-        }
-        //Evento de cambio de estado del toggle button
-        void tgConnect_HandleCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            if (e.IsChecked)
+
+                try
+                {
+                    buttonConnect.Enabled = true;
+
+                    myConnection.thisDevice.Dispose();
+
+                    myConnection.thisSocket.OutputStream.WriteByte(200);
+                    myConnection.thisSocket.OutputStream.Close();
+
+                    myConnection.thisSocket.Close();
+
+                    myConnection = new BluetoothConnection();
+                    _socket = null;
+
+                    connected.Text = "Not connected to the Arduino!";
+                }
+                catch { }
+            };
+
+
+
+            fanDrehzahl.ProgressChanged += (object sender, SeekBar.ProgressChangedEventArgs e) =>
             {
-                //si se activa el toggle button se incial el metodo de conexion
-                Connect();
-            }
-            else
-            {
-                //en caso de desactivar el toggle button se desconecta del arduino
-                if (btSocket.IsConnected)
+                if (e.FromUser)
                 {
                     try
                     {
-                        btSocket.Close();
-                    }
-                    catch (System.Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-            }
-        }
-        //Evento de conexion al Bluetooth
-        public void Connect()
-        {
-            //Iniciamos la conexion con el arduino
-            BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
-            System.Console.WriteLine("Conexion en curso" + device);
+                        
+                        /*if(e.Progress <=62 )
+                            dataToSend = new Java.Lang.String("b");
+                        else
+                            dataToSend = new Java.Lang.String("a");*/
+                        dataToSend = new Java.Lang.String("A");
 
-            //Indicamos al adaptador que ya no sea visible
-            mBluetoothAdapter.CancelDiscovery();
+                        writeData(dataToSend);
+                        //writeData(dataToSend);
+                        //Java.Lang.String message = dataToSend;
+                        //byte[] msgBuffer = message.GetBytes();
+                        //Console.WriteLine("PROGRESO: " + msgBuffer);
+                        //myConnection.thisSocket.OutputStream.Write(msgBuffer, 0, msgBuffer.Length);
+                        //System.Threading.Thread.Sleep(10);
+                    }
+                    catch { }
+                }
+            };
+
+       
+        #endregion
+    }
+
+        private void writeDataModificated(Java.Lang.String data)
+        {
+            //Extraemos el stream de salida
             try
             {
-                //Inicamos el socket de comunicacion con el arduino
-                btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                //Conectamos el socket
-                btSocket.Connect();
-                System.Console.WriteLine("Conexion Correcta");
+                outStream = myConnection.thisSocket.OutputStream;
             }
             catch (System.Exception e)
             {
-                //en caso de generarnos error cerramos el socket
-                Console.WriteLine(e.Message);
-                try
-                {
-                    btSocket.Close();
-                }
-                catch (System.Exception)
-                {
-                    System.Console.WriteLine("Imposible Conectar");
-                }
-                System.Console.WriteLine("Socket Creado");
+                System.Console.WriteLine("Error al enviar" + e.Message);
             }
-            //Una vez conectados al bluetooth mandamos llamar el metodo que generara el hilo
-            //que recibira los datos del arduino
-            beginListenForData();
-            //NOTA envio la letra e ya que el sketch esta configurado para funcionar cuando
-            //recibe esta letra.
-            dataToSend = new Java.Lang.String("A");
-            writeData(dataToSend);
-        }
-        //Evento para inicializar el hilo que escuchara las peticiones del bluetooth
-        public void beginListenForData()
-        {
-            //Extraemos el stream de entrada
+
+            //creamos el string que enviaremos
+            Java.Lang.String message = data;
+
+            //lo convertimos en bytes
+            byte[] msgBuffer = message.GetBytes();
+
             try
             {
-                inStream = btSocket.InputStream;
+                //Escribimos en el buffer el arreglo que acabamos de generar
+                //outStream.Write(msgBuffer, 0, msgBuffer.Length);
+                outStream.WriteByte(2); 
             }
-            catch (System.IO.IOException ex)
+            catch (System.Exception e)
             {
-                Console.WriteLine(ex.Message);
+                System.Console.WriteLine("Error al enviar" + e.Message);
             }
-            //Creamos un hilo que estara corriendo en background el cual verificara si hay algun dato
-            //por parte del arduino
-            Task.Factory.StartNew(() => {
-                //declaramos el buffer donde guardaremos la lectura
-                byte[] buffer = new byte[1024];
-                //declaramos el numero de bytes recibidos
-                int bytes;
-                while (true)
-                {
-                    try
-                    {
-                        //leemos el buffer de entrada y asignamos la cantidad de bytes entrantes
-                        bytes = inStream.Read(buffer, 0, buffer.Length);
-                        //Verificamos que los bytes contengan informacion
-                        if (bytes > 0)
-                        {
-                            //Corremos en la interfaz principal
-                            RunOnUiThread(() => {
-                                //Convertimos el valor de la informacion llegada a string
-                                string valor = System.Text.Encoding.ASCII.GetString(buffer);
-                                //Agregamos a nuestro label la informacion llegada
-                                Result.Text = Result.Text + "\n" + valor;
-                            });
-                        }
-                    }
-                    catch (Java.IO.IOException)
-                    {
-                        //En caso de error limpiamos nuestra label y cortamos el hilo de comunicacion
-                        RunOnUiThread(() => {
-                            Result.Text = string.Empty;
-                        });
-                        break;
-                    }
-                }
-            });
         }
+
         //Metodo de envio de datos la bluetooth
         private void writeData(Java.Lang.String data)
         {
@@ -261,12 +282,7 @@ namespace AplicacionCasaDomotica
                 System.Console.WriteLine("Error al enviar" + e.Message);
             }
         }
-        #endregion
 
-        private void TgConnect_HandleCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
@@ -331,4 +347,22 @@ namespace AplicacionCasaDomotica
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    #region Prueba
+
+    public class BluetoothConnection
+    {
+
+        public void getAdapter() { this.thisAdapter = BluetoothAdapter.DefaultAdapter; }
+
+
+        //change the bd.name according to the name of your bluetooth module
+        public void getDevice() { this.thisDevice = (from bd in this.thisAdapter.BondedDevices where bd.Name == "SLAVE_ZINCRI_" select bd).FirstOrDefault(); }
+
+        public BluetoothAdapter thisAdapter { get; set; }
+        public BluetoothDevice thisDevice { get; set; }
+
+        public BluetoothSocket thisSocket { get; set; }
+    }
+    #endregion
 }
