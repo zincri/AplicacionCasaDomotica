@@ -181,7 +181,7 @@ namespace AplicacionCasaDomotica
             beginListenForData();
             //NOTA envio la letra e ya que el sketch esta configurado para funcionar cuando
             //recibe esta letra.
-            dataToSend = new Java.Lang.String("e");
+            dataToSend = new Java.Lang.String("A");
             writeData(dataToSend);
         }
         //Evento para inicializar el hilo que escuchara las peticiones del bluetooth
