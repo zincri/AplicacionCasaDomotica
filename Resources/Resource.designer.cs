@@ -8737,10 +8737,7 @@ namespace AplicacionCasaDomotica
 		{
 			
 			// aapt resource value: 0x7F100000
-			public const int device_filter = 2131755008;
-			
-			// aapt resource value: 0x7F100001
-			public const int xamarin_essentials_fileprovider_file_paths = 2131755009;
+			public const int xamarin_essentials_fileprovider_file_paths = 2131755008;
 			
 			static Xml()
 			{
