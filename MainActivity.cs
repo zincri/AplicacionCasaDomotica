@@ -271,6 +271,7 @@ namespace AplicacionCasaDomotica
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             #region CodigoGrabar
+            string parametro = "";
             if (requestCode == voice) {
                 if (resultCode == Android.App.Result.Ok) {
                     var matches = data.GetStringArrayListExtra(RecognizerIntent.ExtraResults);
@@ -280,35 +281,86 @@ namespace AplicacionCasaDomotica
 
                         switch (textInput)
                         {
-                            case "Encender luz": 
+                            case "Encender luz sala":
+                            case "encender luz sala":
+                                parametro = "A";
                                 texto.Text = "A";
                                 break;
-                            case "Apagar luz":
+                            case "Apagar luz sala":
+                            case "apagar luz sala":
+                                parametro = "B";
                                 texto.Text = "B";
                                 break;
-                            case "Encender ventilador":
+                            case "Encender luz patio trasero":
+                            case "encender luz patio trasero":
+                                parametro = "C";
                                 texto.Text = "C";
                                 break;
-                            case "encender ventilador":
-                                texto.Text = "C";
-                                break;
-                            case "Apagar ventilador":
+                            case "Apagar luz patio trasero":
+                            case "apagar luz patio trasero":
+                                parametro = "D";
                                 texto.Text = "D";
                                 break;
-                            case "Abrir puerta":
+                            case "Encender luz patio delantero":
+                            case "encender luz patio delantero":
+                                parametro = "E";
                                 texto.Text = "E";
                                 break;
-                            case "Cerrar puerta":
+                            case "Apagar luz patio delantero":
+                            case "apagar luz patio delantero":
+                                parametro = "F";
                                 texto.Text = "F";
                                 break;
-                            case "Encender alarma":
+                            case "Encender luz pasillo":
+                            case "encender luz pasillo":
+                                parametro = "P";
+                                texto.Text = "P";
+                                break;
+                            case "Apagar luz pasillo":
+                            case "apagar luz pasillo":
+                                parametro = "Q";
+                                texto.Text = "Q";
+                                break;
+                            case "Encender ventilador":
+                            case "encender ventilador":
+                                parametro = "G";
                                 texto.Text = "G";
                                 break;
-                            case "Apagar alarma":
+                            case "Apagar ventilador":
+                            case "apagar ventilador":
+                                parametro = "H";
                                 texto.Text = "H";
                                 break;
+                            /*case "Apagar ventilador":
+                                parametro = "I";
+                                texto.Text = "I";
+                                break;*/
+                            case "Abrir puerta":
+                            case "abrir puerta":
+                                parametro = "J";
+                                texto.Text = "J";
+                                break;
+                            /*case "abrir puerta":
+                                parametro = "K";
+                                texto.Text = "K";
+                                break;*/
+                            case "Cerrar puerta":
+                            case "cerrar puerta":
+                                parametro = "M";
+                                texto.Text = "M";
+                                break;
+                            case "Encender alarma":
+                            case "encender alarma":
+                                parametro = "N";
+                                texto.Text = "N";
+                                break;
+                            case "Apagar alarma":
+                            case "apagar alarma":
+                                parametro = "O";
+                                texto.Text = "O";
+                                break;
                             default:
-                                texto.Text = "No encontrado";
+                                parametro = "No encontrado";
                                 break;
                         }
 
@@ -316,12 +368,13 @@ namespace AplicacionCasaDomotica
 
                     }
                     else {
+                        parametro = "No se reconoce";
                         texto.Text = "No se reconoce";
                     }
                 }
             }
 
-            dataToSend = new Java.Lang.String(texto.Text);
+            dataToSend = new Java.Lang.String(parametro);
             writeData(dataToSend);
             #endregion
             base.OnActivityResult(requestCode, resultCode, data);
