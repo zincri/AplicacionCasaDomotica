@@ -218,6 +218,20 @@ namespace AplicacionCasaDomotica
                                 string valor = System.Text.Encoding.ASCII.GetString(buffer);
                                 //Agregamos a nuestro label la informacion llegada
                                 Result.Text = Result.Text + "\n" + valor;
+
+                                if (valor == "X")
+                                {
+                                    Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(this);
+                                    Android.App.AlertDialog alert = dialog.Create();
+                                    alert.SetTitle("Title");
+                                    alert.SetMessage("La alarma se activo, para sileciarla presione grabar y diga: Apagar alarma. ");
+                                    alert.SetButton("OK", (c, ev) =>
+                                    {
+                                    // Ok button click task  
+                                });
+                                    alert.SetButton2("CANCEL", (c, ev) => { });
+                                    alert.Show();
+                                }
                             });
                         }
                     }
@@ -232,6 +246,8 @@ namespace AplicacionCasaDomotica
                 }
             });
         }
+
+        
         //Metodo de envio de datos la bluetooth
         private void writeData(Java.Lang.String data)
         {
