@@ -212,13 +212,14 @@ namespace AplicacionCasaDomotica
                         //Verificamos que los bytes contengan informacion
                         if (bytes > 0)
                         {
+                            string c = "";
                             //Corremos en la interfaz principal
                             RunOnUiThread(() => {
                                 //Convertimos el valor de la informacion llegada a string
                                 string valor = System.Text.Encoding.ASCII.GetString(buffer);
                                 //Agregamos a nuestro label la informacion llegada
                                 Result.Text = Result.Text + "\n" + valor;
-                                string c = valor.Substring(0,1);
+                                c = valor.Substring(0,1);
 
                                 if (c == "X")
                                 {
