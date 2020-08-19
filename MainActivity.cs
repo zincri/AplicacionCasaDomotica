@@ -178,7 +178,7 @@ namespace AplicacionCasaDomotica
             }
             //Una vez conectados al bluetooth mandamos llamar el metodo que generara el hilo
             //que recibira los datos del arduino
-            //beginListenForData();
+            beginListenForData();
             //NOTA envio la letra e ya que el sketch esta configurado para funcionar cuando
             //recibe esta letra.
             //dataToSend = new Java.Lang.String("A");
@@ -218,8 +218,9 @@ namespace AplicacionCasaDomotica
                                 string valor = System.Text.Encoding.ASCII.GetString(buffer);
                                 //Agregamos a nuestro label la informacion llegada
                                 Result.Text = Result.Text + "\n" + valor;
+                                string c = valor.Substring(0,1);
 
-                                if (valor == "X")
+                                if (c == "X")
                                 {
                                     Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(this);
                                     Android.App.AlertDialog alert = dialog.Create();
@@ -376,7 +377,7 @@ namespace AplicacionCasaDomotica
                                 texto.Text = "O";
                                 break;
                             default:
-                                parametro = "No encontrado";
+                                parametro = "W";
                                 break;
                         }
 
@@ -384,8 +385,8 @@ namespace AplicacionCasaDomotica
 
                     }
                     else {
-                        parametro = "No se reconoce";
-                        texto.Text = "No se reconoce";
+                        parametro = "W";
+                        texto.Text = "W";
                     }
                 }
             }
