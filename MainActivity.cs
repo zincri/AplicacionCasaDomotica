@@ -390,9 +390,12 @@ namespace AplicacionCasaDomotica
                     }
                 }
             }
-
-            dataToSend = new Java.Lang.String(parametro);
-            writeData(dataToSend);
+            if (parametro != "W")
+            {
+                dataToSend = new Java.Lang.String(parametro);
+                writeData(dataToSend);
+            }
+            
             #endregion
             base.OnActivityResult(requestCode, resultCode, data);
         }
