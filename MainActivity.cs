@@ -212,16 +212,16 @@ namespace AplicacionCasaDomotica
                         //Verificamos que los bytes contengan informacion
                         if (bytes > 0)
                         {
-                            string c = "";
+                            string par = "";
                             //Corremos en la interfaz principal
                             RunOnUiThread(() => {
                                 //Convertimos el valor de la informacion llegada a string
                                 string valor = System.Text.Encoding.ASCII.GetString(buffer);
                                 //Agregamos a nuestro label la informacion llegada
                                 Result.Text = Result.Text + "\n" + valor;
-                                c = valor.Substring(0,1);
+                                par = valor.Substring(0,1);
 
-                                if (c == "X")
+                                if (par == "X")
                                 {
                                     Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(this);
                                     Android.App.AlertDialog alert = dialog.Create();
