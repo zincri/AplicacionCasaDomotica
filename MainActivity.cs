@@ -179,10 +179,6 @@ namespace AplicacionCasaDomotica
             //Una vez conectados al bluetooth mandamos llamar el metodo que generara el hilo
             //que recibira los datos del arduino
             beginListenForData();
-            //NOTA envio la letra e ya que el sketch esta configurado para funcionar cuando
-            //recibe esta letra.
-            //dataToSend = new Java.Lang.String("A");
-            //writeData(dataToSend);
         }
         //Evento para inicializar el hilo que escuchara las peticiones del bluetooth
         public void beginListenForData()
@@ -280,11 +276,7 @@ namespace AplicacionCasaDomotica
             }
         }
         #endregion
-        /*
-        private void TgConnect_HandleCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            throw new NotImplementedException();
-        }*/
+        
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
@@ -349,19 +341,11 @@ namespace AplicacionCasaDomotica
                                 parametro = "H";
                                 texto.Text = "H";
                                 break;
-                            /*case "Apagar ventilador":
-                                parametro = "I";
-                                texto.Text = "I";
-                                break;*/
                             case "Abrir puerta":
                             case "abrir puerta":
                                 parametro = "J";
                                 texto.Text = "J";
                                 break;
-                            /*case "abrir puerta":
-                                parametro = "K";
-                                texto.Text = "K";
-                                break;*/
                             case "Cerrar puerta":
                             case "cerrar puerta":
                                 parametro = "M";
